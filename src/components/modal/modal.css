@@ -1,0 +1,13 @@
+.modal-card-head {
+    justify-content: end;
+    display: flex;
+}
+
+.modal-card-foot {
+    justify-content: center;
+}
+
+
+.modal-card-body {
+    padding: 2rem 2rem;
+}

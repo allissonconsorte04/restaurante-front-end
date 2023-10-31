@@ -1,4 +1,9 @@
+.navbar {
+    background-color: var(--body-color);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 .navbar-item img {
     max-height: 3.75rem;
-    height: 10000px;
+    height: 3.5rem;
 }

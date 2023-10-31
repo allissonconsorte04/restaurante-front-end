@@ -34,7 +34,7 @@
 }
 
 /* Responsive typography */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 728px) {
   :root {
     --h1-font-size: 1.75rem;
     --h2-font-size: 1.25rem;
@@ -54,6 +54,13 @@
 
 html {
   scroll-behavior: smooth;
+  min-height: 100vh;
+}
+body {
+  min-height: 100vh;
+  max-width: 100%;
+  background-color: papayawhip; 
+  margin: 0 auto;
 }
 
 body,
