@@ -7,7 +7,7 @@ import ModalClientes from '../../components/modal/ModalClientes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-interface Cliente {
+export interface Cliente {
   id?: number;
   nome: string;
   email: string;

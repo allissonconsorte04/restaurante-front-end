@@ -4,6 +4,7 @@ import Navbar from './components/navbar/Navbar';
 import Produtos from './pages/produtos/Produtos';
 import Clientes from './pages/clientes/Clientes';
 import Funcionarios from './pages/funcionarios/Funcionarios';
+import Pedidos from './pages/pedidos/Pedidos';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path='/funcionarios' element={<Funcionarios />} />
+          <Route path='/pedidos' element={<Pedidos />} />
           {/* Outras rotas podem ser definidas aqui */}
         </Routes>
       </div>
