@@ -11,3 +11,8 @@
 .modal-card-body {
     padding: 2rem 2rem;
 }
+
+.control {
+    display: flex;
+    align-items: center;
+}

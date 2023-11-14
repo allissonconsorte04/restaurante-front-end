@@ -4,6 +4,9 @@ import axios from 'axios';
 import './clientes.css';
 import ModalClientes from '../../components/modal/ModalClientes';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
 interface Cliente {
   id?: number;
   nome: string;
@@ -47,7 +50,7 @@ const Clientes = () => {
   };
 
   const handleRemoveCliente = (cliente: Cliente) => {
-    console.log('entrou aqui0', cliente)
+    console.log('entrou aqui0', cliente);
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -105,16 +108,16 @@ const Clientes = () => {
               <td>
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
-                    className="btn btn-edit"
+                    className="btn-edit btn"
                     onClick={() => handleEditarCliente(cliente)}
                   >
-                    Editar
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
                     className="btn btn-remove"
                     onClick={() => handleRemoveCliente(cliente)}
                   >
-                    Remover
+                    <FontAwesomeIcon icon={faTrashAlt} />
                   </button>
                 </div>
               </td>

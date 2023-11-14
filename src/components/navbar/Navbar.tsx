@@ -38,6 +38,7 @@ function Navbar() {
         <Link to="/" className='navbar-item'>Início</Link>
         <Link to="/produtos" className='navbar-item'>Produtos</Link>
         <Link to="/clientes" className='navbar-item'>Clientes</Link>
+        <Link to="/funcionarios" className='navbar-item'>Funcionarios</Link>
       </div>
       <div className="navbar-end">
         <div className="navbar-item">
