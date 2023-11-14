@@ -12,7 +12,7 @@ interface Pedido {
   cliente_nome: string;
   status: string;
   data: Date;
-  total: number;
+  valor_total: number;
 }
 
 const Pedidos = () => {
@@ -92,11 +92,11 @@ const Pedidos = () => {
               cliente_nome: '',
               status: '',
               data: new Date(),
-              total: 0,
+              valor_total: 0,
             })
           }
         >
-          Adicionar Pedido +
+          Novo Pedido +
         </button>
       </div>
       <table>
@@ -117,7 +117,7 @@ const Pedidos = () => {
               <td>{pedido.cliente_nome}</td>
               <td>{pedido.status}</td>
               <td>{formatDate(pedido.data)}</td>
-              <td>{`R$ ${Number(pedido.total).toFixed(2)}`}</td>
+              <td>{`R$ ${Number(pedido.valor_total).toFixed(2)}`}</td>
               <td className="actions-columns">
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button

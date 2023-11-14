@@ -9,7 +9,7 @@ interface Cliente {
   telefone: string;
 }
 
-interface ModalClientesProps {
+export interface ModalClientesProps {
   clienteData: Cliente | null; // Declare a prop como Cliente | null
   fecharModal: () => void;
 }
@@ -26,7 +26,6 @@ const ModalClientes: React.FC<ModalClientesProps> = ({
   });
 
   useEffect(() => {
-    console.log('cliente', cliente.id);
     if (clienteData) {
       setCliente(clienteData); // Atualize o estado apenas se clienteData não for nulo
     }

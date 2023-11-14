@@ -1,27 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './modalClientes.css'; // Certifique-se de ter o arquivo de estilo adequado
+import { Cliente } from '../../pages/clientes/Clientes';
 
 interface Pedido {
   id?: number;
+  cliente_id?: number;
   cliente_nome: string;
   status: string;
-  data: number;
-  total: number;
+  data: Date;
+  valor_total: number;
 }
 
 interface ModalPedidosProps {
-  pedidoData: Pedido;
+  pedidoData: Pedido | null;
   fecharModal: () => void;
 }
 
-const ModalPedidos: React.FC<ModalPedidosProps> = ({ pedidoData, fecharModal }) => {
+const ModalPedidos: React.FC<ModalPedidosProps> = ({
+  pedidoData,
+  fecharModal,
+}) => {
   const [pedido, setPedido] = useState<Pedido>({
     id: pedidoData?.id || undefined,
     cliente_nome: '',
     status: 'aberto',
-    data: 0,
-    total: 0,
+    data: new Date(),
+    valor_total: 0,
+  });
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [showOptions, setShowOptions] = useState(false);
+  const [cliente, setCliente] = useState<Cliente>({
+    id: 0,
+    nome: '',
+    email: '',
+    telefone: '',
   });
 
   useEffect(() => {
@@ -66,6 +79,49 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({ pedidoData, fecharModal }) 
     }
   };
 
+  const getClientes = (nome?: string) => {
+    let params;
+    const token = localStorage.getItem('token');
+    if (nome) {
+      params = {
+        nome: nome,
+      };
+    } else {
+      params = {};
+    }
+
+    if (token) {
+      axios
+        .get('http://localhost:3000/api/clientes/', {
+          headers: {
+            Authorization: `${token}`,
+          },
+          params: params,
+        })
+        .then((response) => {
+          setClientes(response.data);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter clientes: ', error);
+        });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputText = e.target.value;
+    setPedido({ ...pedido, cliente_nome: inputText });
+    getClientes(inputText);
+    setShowOptions(inputText.trim().length > 0);
+  };
+
+  const handleOptionClick = (cliente: Cliente | undefined) => {
+    console.log('clientola => ', cliente)
+    if (cliente && cliente.id) {
+      setPedido({ ...pedido, cliente_id: cliente.id, cliente_nome: cliente.nome });
+      setShowOptions(false);
+    }
+  };
+
   return (
     <div className="modal is-active">
       <div className="modal-background" onClick={fecharModal}></div>
@@ -87,54 +143,24 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({ pedidoData, fecharModal }) 
                   type="text"
                   placeholder="Cliente"
                   value={pedido.cliente_nome}
-                  onChange={(e) =>
-                    setPedido({ ...pedido, cliente_nome: e.target.value })
-                  }
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
-            <div className="field">
-              <label className="label">Status</label>
-              <div className="control">
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="Produto"
-                  value={pedido.status}
-                  onChange={(e) =>
-                    setPedido({ ...pedido, status: e.target.value })
-                  }
-                />
+            {showOptions && (
+              <div className="options-container">
+                {clientes.map((cliente) => (
+                  <div
+                    key={cliente.id}
+                    className="option"
+                    onClick={() => handleOptionClick(cliente)}
+                  >
+                    {cliente.nome}
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="field">
-              <label className="label">Quantidade</label>
-              <div className="control">
-                <input
-                  className="input"
-                  type="number"
-                  placeholder="Data"
-                  value={pedido.data}
-                  onChange={(e) =>
-                    setPedido({ ...pedido, data: parseFloat(e.target.value) })
-                  }
-                />
-              </div>
-            </div>
-            <div className="field">
-              <label className="label">Total</label>
-              <div className="control">
-                <input
-                  className="input"
-                  type="number"
-                  placeholder="Total"
-                  value={pedido.total}
-                  onChange={(e) =>
-                    setPedido({ ...pedido, total: parseFloat(e.target.value) })
-                  }
-                />
-              </div>
-            </div>
+            )}
+            
           </div>
         </section>
         <footer className="modal-card-foot">

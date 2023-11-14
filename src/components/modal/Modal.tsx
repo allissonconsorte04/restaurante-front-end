@@ -17,7 +17,6 @@ function Modal({ isOpen, closeModal, onSave, onCancel }: ModalProps) {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    console.log('entrou aqui')
     axios
       .post('http://localhost:3000/api/login/', {
         username: username,
@@ -63,7 +62,7 @@ function Modal({ isOpen, closeModal, onSave, onCancel }: ModalProps) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                <span className="icon is-small is-left">
+                <span className="icon is-small is-left" style={{top: 4}}>
                   <i className="fas fa-envelope"></i>
                 </span>
               </div>
@@ -79,7 +78,7 @@ function Modal({ isOpen, closeModal, onSave, onCancel }: ModalProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <span className="icon is-small is-left">
+                <span className="icon is-small is-left" style={{top: 4}}>
                   <Icon path={mdiLock} size={1} />
                 </span>
               </div>
