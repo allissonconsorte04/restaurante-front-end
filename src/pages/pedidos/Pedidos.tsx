@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import './pedidos.css'; // Certifique-se de ter o arquivo de estilo adequado
 import ModalPedidos from '../../components/modal/ModalPedidos';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import ModalItensPedido from '../../components/modal/ModalItensPedido';
 
 interface Pedido {
   id?: number;
@@ -18,6 +19,7 @@ interface Pedido {
 const Pedidos = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isNewModalVisible, setNewModalVisible] = useState(false);
   const [pedidoParaEditar, setPedidoParaEditar] = useState<Pedido | null>(
     null
   );
@@ -52,27 +54,13 @@ const Pedidos = () => {
     setModalVisible(true);
   };
 
-  const handleRemovePedido = (pedido: Pedido) => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .delete(`http://localhost:3000/api/pedidos/${pedido.id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          console.log('Pedido deletado: ', response.data);
-          fecharModal();
-        })
-        .catch((error) => {
-          console.error('Erro ao deletar pedido: ', error);
-        });
-    }
+  const handleNewPedido = (pedido: Pedido) => {
+    setPedidoParaEditar(pedido);
+    setNewModalVisible(true);
   };
 
   const fecharModal = () => {
+    setNewModalVisible(false);
     setModalVisible(false);
     setPedidoParaEditar(null);
     getAllPedidos();
@@ -88,7 +76,7 @@ const Pedidos = () => {
         <button
           className="btn btn-add-pedido"
           onClick={() =>
-            handleEditarPedido({
+            handleNewPedido({
               cliente_nome: '',
               status: '',
               data: new Date(),
@@ -124,13 +112,7 @@ const Pedidos = () => {
                     className="btn-edit btn"
                     onClick={() => handleEditarPedido(pedido)}
                   >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                  <button
-                    className="btn btn-remove"
-                    onClick={() => handleRemovePedido(pedido)}
-                  >
-                    <FontAwesomeIcon icon={faTrashAlt} />
+                    <FontAwesomeIcon icon={faAdd} />
                   </button>
                 </div>
               </td>
@@ -138,8 +120,11 @@ const Pedidos = () => {
           ))}
         </tbody>
       </table>
-      {isModalVisible && (
+      {isNewModalVisible && (
         <ModalPedidos pedidoData={pedidoParaEditar} fecharModal={fecharModal} />
+      )}
+      {isModalVisible && (
+        <ModalItensPedido pedidoId={pedidoParaEditar?.id} fecharModal={fecharModal} />
       )}
     </div>
   );
