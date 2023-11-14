@@ -29,6 +29,14 @@
   font-family: Arial, sans-serif;
 }
 
+.actions-columns {
+  width: 10rem;
+}
+
+.id-columns {
+  width: 5rem;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

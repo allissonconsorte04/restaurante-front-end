@@ -28,6 +28,14 @@
     padding: 20px;
     font-family: Arial, sans-serif;
   }
+
+  .actions-columns {
+    width: 10rem;
+  }
+
+  .id-columns {
+    width: 5rem;
+  }
   
   table {
     width: 100%;

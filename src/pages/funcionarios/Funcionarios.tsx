@@ -100,11 +100,11 @@ const Funcionarios = () => {
         <tbody>
           {funcionarios.map((funcionario) => (
             <tr key={funcionario.id}>
-              <td>{funcionario.id}</td>
+              <td className='id-columns'>{funcionario.id}</td>
               <td>{funcionario.nome}</td>
               <td>{funcionario.cargo}</td>
               <td>{`R$ ${Number(funcionario.salario).toFixed(2)}`}</td>
-              <td>
+              <td className='actions-columns'>
               <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
                     className="btn-edit btn"

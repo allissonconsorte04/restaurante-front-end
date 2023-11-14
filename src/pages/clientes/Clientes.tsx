@@ -101,11 +101,11 @@ const Clientes = () => {
         <tbody>
           {clientes.map((cliente) => (
             <tr key={cliente.id}>
-              <td>{cliente.id}</td>
+              <td className='id-columns'>{cliente.id}</td>
               <td>{cliente.nome}</td>
               <td>{cliente.email}</td>
               <td>{cliente.telefone}</td>
-              <td>
+              <td className='actions-columns'>
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
                     className="btn-edit btn"

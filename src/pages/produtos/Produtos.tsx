@@ -96,10 +96,10 @@ const Produtos = () => {
         <tbody>
           {produtos.map((produto) => (
             <tr key={produto.id}>
-              <td>{produto.id}</td>
+              <td className='id-columns'>{produto.id}</td>
               <td>{produto.nome}</td>
               <td>{produto.preco}</td>
-              <td>
+              <td className='actions-columns'>
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
                     className="btn-edit btn"
