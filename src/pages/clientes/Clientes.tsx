@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import './clientes.css';
 import ModalClientes from '../../components/modal/ModalClientes';
+import api from '../../services/api';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -26,22 +26,14 @@ const Clientes = () => {
   }, []);
 
   const getAllClientes = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .get('http://localhost:3000/api/clientes/', {
-          headers: {
-            Authorization: `${token}`,
-          },
-        })
-        .then((response) => {
-          setClientes(response.data);
-        })
-        .catch((error) => {
-          console.error('Erro ao obter clientes:', error);
-        });
-    }
+    api
+      .get('/clientes')
+      .then((response) => {
+        setClientes(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter clientes:', error);
+      });
   };
 
   const handleEditarCliente = (cliente: Cliente) => {
@@ -50,24 +42,15 @@ const Clientes = () => {
   };
 
   const handleRemoveCliente = (cliente: Cliente) => {
-    console.log('entrou aqui0', cliente);
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .delete(`http://localhost:3000/api/clientes/${cliente.id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          console.log('Cliente deletado: ', response.data);
-          fecharModal();
-        })
-        .catch((error) => {
-          console.error('Erro ao deletar cliente: ', error);
-        });
-    }
+    api
+      .delete(`/clientes/${cliente.id}`)
+      .then((response) => {
+        console.log('Cliente deletado: ', response.data);
+        fecharModal();
+      })
+      .catch((error) => {
+        console.error('Erro ao deletar cliente: ', error);
+      });
   };
 
   const fecharModal = () => {

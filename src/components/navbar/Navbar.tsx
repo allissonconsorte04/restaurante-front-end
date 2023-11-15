@@ -1,59 +1,73 @@
-import React, { useState } from 'react'
-import Logo from '../../assets/logo_restaurante.png'
-import Modal from '../modal/Modal';
-import "./navbar.css"
-import { Link } from "react-router-dom"
+import { nav } from '../../routes/navigation';
+import Logo from '../../assets/logo_restaurante.png';
+import './navbar.css';
+import { Link } from 'react-router-dom';
+import { AuthData } from '../../routes/AuthWrapper';
 
 function Navbar() {
-    const [isModalOpen, setModalOpen] = useState(false);
+  const { user, logout } = AuthData();
 
-    const openModal = () => {
-        setModalOpen(true)
-    }
-
-    const closeModal = () => {
-        setModalOpen(false)
-    }
+  const MenuItem = ({ r }) => {
+    return (
+      <Link to={r.path} className="navbar-item">
+        {r.name}
+      </Link>
+    );
+  };
 
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
-    <div className="navbar-brand">
-      <a className="navbar-item">
-        <img src={Logo} width="60" height="50" alt="Bulma Logo" style={{maxHeight:100}}/>
-      </a>
-      <a
-        role="button"
-        className="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    <div id="navbarBasicExample" className="navbar-menu">
-      <div className="navbar-start">
-        <Link to="/" className='navbar-item'>Início</Link>
-        <Link to="/produtos" className='navbar-item'>Produtos</Link>
-        <Link to="/clientes" className='navbar-item'>Clientes</Link>
-        <Link to="/funcionarios" className='navbar-item'>Funcionarios</Link>
-        <Link to="/pedidos" className='navbar-item'>Pedidos</Link>
+      <div className="navbar-brand">
+        <a className="navbar-item">
+          <img
+            src={Logo}
+            width="60"
+            height="50"
+            alt="Bulma Logo"
+            style={{ maxHeight: 100 }}
+          />
+        </a>
+        <a
+          role="button"
+          className="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-      <div className="navbar-end">
-        <div className="navbar-item">
-          <div className="buttons">
-            <a className="btn is-primary" onClick={openModal}>
-              <strong>Login</strong>
-            </a>
+      <div id="navbarBasicExample" className="navbar-menu">
+        <div className="navbar-start">
+          <div className="navbar-route-items">
+            {nav.map((r, i) => {
+              if (!r.isPrivate && r.isMenu) {
+                return <MenuItem key={i} r={r} />;
+              } else if (user.isAuthenticated && r.isMenu) {
+                return <MenuItem key={i} r={r} />;
+              } else return false;
+            })}
           </div>
+
+          {user.isAuthenticated ? (
+            <div className="navbar-item">
+              <Link to={'#'} onClick={logout} className="btn is-primary">
+                Log out
+              </Link>
+            </div>
+          ) : (
+            <div className="navbar-item">
+              <Link to={'login'} className="btn is-primary">
+                Log in
+              </Link>
+            </div>
+          )}
         </div>
       </div>
-      <Modal isOpen={isModalOpen} closeModal={closeModal} title='Titulo pika' onSave={() => {}} />
-    </div>
-  </nav>
-  )
+    </nav>
+  );
 }
 
-export default Navbar
+export default Navbar;
