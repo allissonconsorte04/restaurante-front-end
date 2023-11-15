@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './cardproduto.css';
-import axios from 'axios';
+import api from '../../services/api';
 
 interface Product {
   id: number;
@@ -12,24 +12,14 @@ const CardProduto = () => {
   const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
-    // Verifica se o token de autenticação está presente no armazenamento local.
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      // Se o token estiver presente, faça a solicitação HTTP com o cabeçalho de autorização.
-      axios
-        .get('http://localhost:3000/api/produtos/', {
-          headers: {
-            Authorization: `${token}`, // Adicione o token ao cabeçalho de autorização
-          },
-        })
-        .then((response) => {
-          setProdutos(response.data);
-        })
-        .catch((error) => {
-          console.error('Erro ao obter produtos:', error);
-        });
-    }
+    api
+      .get('/produtos')
+      .then((response) => {
+        setProdutos(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter produtos:', error);
+      });
   }, []);
 
   return (
