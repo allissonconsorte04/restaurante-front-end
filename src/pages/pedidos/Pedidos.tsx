@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import './pedidos.css'; // Certifique-se de ter o arquivo de estilo adequado
 import ModalPedidos from '../../components/modal/ModalPedidos';
@@ -7,6 +6,7 @@ import ModalPedidos from '../../components/modal/ModalPedidos';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import ModalItensPedido from '../../components/modal/ModalItensPedido';
+import api from '../../services/api';
 
 interface Pedido {
   id?: number;
@@ -20,33 +20,21 @@ const Pedidos = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNewModalVisible, setNewModalVisible] = useState(false);
-  const [pedidoParaEditar, setPedidoParaEditar] = useState<Pedido | null>(
-    null
-  );
+  const [pedidoParaEditar, setPedidoParaEditar] = useState<Pedido | null>(null);
 
   useEffect(() => {
     getAllPedidos();
-    console.log(pedidos);
   }, []);
 
   const getAllPedidos = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .get('http://localhost:3000/api/pedidos/', {
-          headers: {
-            Authorization: `${token}`,
-          },
-        })
-        .then((response) => {
-          console.log('response: ', response.data);
-          setPedidos(response.data);
-        })
-        .catch((error) => {
-          console.error('Erro ao obter pedidos:', error);
-        });
-    }
+    api
+      .get('/pedidos')
+      .then((response) => {
+        setPedidos(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter pedidos:', error);
+      });
   };
 
   const handleEditarPedido = (pedido: Pedido) => {
@@ -124,7 +112,10 @@ const Pedidos = () => {
         <ModalPedidos pedidoData={pedidoParaEditar} fecharModal={fecharModal} />
       )}
       {isModalVisible && (
-        <ModalItensPedido pedidoId={pedidoParaEditar?.id} fecharModal={fecharModal} />
+        <ModalItensPedido
+          pedidoId={pedidoParaEditar?.id}
+          fecharModal={fecharModal}
+        />
       )}
     </div>
   );

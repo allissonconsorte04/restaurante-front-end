@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './modalClientes.css'; // Certifique-se de ter o arquivo de estilo adequado
 import { Cliente } from '../../pages/clientes/Clientes';
+import api from '../../services/api';
 
 interface Pedido {
   id?: number;
@@ -44,44 +44,31 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({
   }, [pedidoData]);
 
   const handleSalvar = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      if (pedido.id) {
-        axios
-          .put(`http://localhost:3000/api/pedidos/${pedido.id}`, pedido, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((response) => {
-            console.log('Pedido Atualizado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao atualizar pedido: ', error);
-          });
-      } else {
-        axios
-          .post('http://localhost:3000/api/pedidos/', pedido, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((response) => {
-            console.log('Pedido criado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao adicionar pedido: ', error);
-          });
-      }
+    if (pedido.id) {
+      api
+        .put(`/pedidos/${pedido.id}`, pedido)
+        .then((response) => {
+          console.log('Pedido Atualizado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao atualizar pedido: ', error);
+        });
+    } else {
+      api
+        .post('/pedidos/', pedido)
+        .then((response) => {
+          console.log('Pedido criado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao adicionar pedido: ', error);
+        });
     }
   };
 
   const getClientes = (nome?: string) => {
     let params;
-    const token = localStorage.getItem('token');
     if (nome) {
       params = {
         nome: nome,
@@ -89,22 +76,16 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({
     } else {
       params = {};
     }
-
-    if (token) {
-      axios
-        .get('http://localhost:3000/api/clientes/', {
-          headers: {
-            Authorization: `${token}`,
-          },
-          params: params,
-        })
-        .then((response) => {
-          setClientes(response.data);
-        })
-        .catch((error) => {
-          console.error('Erro ao obter clientes: ', error);
-        });
-    }
+    api
+      .get('/clientes/', {
+        params: params,
+      })
+      .then((response) => {
+        setClientes(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter clientes: ', error);
+      });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,9 +96,13 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({
   };
 
   const handleOptionClick = (cliente: Cliente | undefined) => {
-    console.log('clientola => ', cliente)
+    console.log('clientola => ', cliente);
     if (cliente && cliente.id) {
-      setPedido({ ...pedido, cliente_id: cliente.id, cliente_nome: cliente.nome });
+      setPedido({
+        ...pedido,
+        cliente_id: cliente.id,
+        cliente_nome: cliente.nome,
+      });
       setShowOptions(false);
     }
   };
@@ -160,7 +145,6 @@ const ModalPedidos: React.FC<ModalPedidosProps> = ({
                 ))}
               </div>
             )}
-            
           </div>
         </section>
         <footer className="modal-card-foot">

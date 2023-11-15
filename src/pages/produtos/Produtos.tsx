@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import './produtos.css'; // Certifique-se de ter o arquivo de estilo adequado
 import ModalProdutos from '../../components/modal/ModalProdutos';
+import api from '../../services/api';
 
 interface Produto {
   id?: number;
@@ -25,22 +25,14 @@ const Produtos = () => {
   }, []);
 
   const getAllProdutos = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .get('http://localhost:3000/api/produtos/', {
-          headers: {
-            Authorization: `${token}`,
-          },
-        })
-        .then((response) => {
-          setProdutos(response.data);
-        })
-        .catch((error) => {
-          console.error('Erro ao obter produtos:', error);
-        });
-    }
+    api
+      .get('/produtos')
+      .then((response) => {
+        setProdutos(response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter produtos:', error);
+      });
   };
 
   const handleEditarProduto = (produto: Produto) => {
@@ -49,23 +41,15 @@ const Produtos = () => {
   };
 
   const handleRemoveProduto = (produto: Produto) => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .delete(`http://localhost:3000/api/produtos/${produto.id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          console.log('Produto deletado: ', response.data);
-          fecharModal();
-        })
-        .catch((error) => {
-          console.error('Erro ao deletar produto: ', error);
-        });
-    }
+    api
+      .delete(`/produtos/${produto.id}`)
+      .then((response) => {
+        console.log('Produto deletado: ', response.data);
+        fecharModal();
+      })
+      .catch((error) => {
+        console.error('Erro ao deletar produto: ', error);
+      });
   };
 
   const fecharModal = () => {
@@ -96,10 +80,10 @@ const Produtos = () => {
         <tbody>
           {produtos.map((produto) => (
             <tr key={produto.id}>
-              <td className='id-columns'>{produto.id}</td>
+              <td className="id-columns">{produto.id}</td>
               <td>{produto.nome}</td>
               <td>{produto.preco}</td>
-              <td className='actions-columns'>
+              <td className="actions-columns">
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
                     className="btn-edit btn"
@@ -108,7 +92,7 @@ const Produtos = () => {
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
-                  className='btn btn-remove'
+                    className="btn btn-remove"
                     onClick={() => handleRemoveProduto(produto)}
                   >
                     <FontAwesomeIcon icon={faTrashAlt} />
