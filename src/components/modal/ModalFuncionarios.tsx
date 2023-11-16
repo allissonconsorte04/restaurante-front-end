@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './modalClientes.css'; // Certifique-se de ter o arquivo de estilo adequado
+import api from '../../services/api';
 
 interface Funcionario {
   id?: number;
@@ -31,51 +31,28 @@ const ModalFuncionarios: React.FC<ModalFuncionariosProps> = ({
     }
   }, [funcionarioData]);
 
-  const formatarSalario = (valor: number) => {
-    const valorFormatado = new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(valor);
-    return valorFormatado;
-  };
-
   const handleSalvar = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      if (funcionario.id) {
-        axios
-          .put(
-            `http://localhost:3000/api/funcionarios/${funcionario.id}`,
-            funcionario,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          )
-          .then((response) => {
-            console.log('Funcionário Atualizado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao atualizar funcionário: ', error);
-          });
-      } else {
-        axios
-          .post('http://localhost:3000/api/funcionarios/', funcionario, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((response) => {
-            console.log('Funcionário criado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao adicionar funcionário: ', error);
-          });
-      }
+    if (funcionario.id) {
+      api
+        .put(`/funcionarios/${funcionario.id}`, funcionario)
+        .then((response) => {
+          console.log('Funcionário Atualizado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao atualizar funcionário: ', error);
+        });
+    } else {
+      console.log('novo funcionario')
+      api
+        .post('/funcionarios/', funcionario)
+        .then((response) => {
+          console.log('Funcionário criado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao adicionar funcionário: ', error);
+        });
     }
   };
 

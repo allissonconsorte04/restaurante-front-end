@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './modalClientes.css';
+import api from '../../services/api';
 
 interface Produto {
   id?: number;
@@ -30,38 +30,26 @@ const ModalProdutos: React.FC<ModalProdutosProps> = ({
   }, [produtoData]);
 
   const handleSalvar = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      if (produto.id) {
-        axios
-          .put(`http://localhost:3000/api/produtos/${produto.id}`, produto, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((response) => {
-            console.log('Produto Atualizado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao atualizar produto: ', error);
-          });
-      } else {
-        axios
-          .post('http://localhost:3000/api/produtos/', produto, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((response) => {
-            console.log('Produto criado: ', response.data);
-            fecharModal();
-          })
-          .catch((error) => {
-            console.error('Erro ao adicionar produto: ', error);
-          });
-      }
+    if (produto.id) {
+      api
+        .put(`/produtos/${produto.id}`, produto)
+        .then((response) => {
+          console.log('Produto Atualizado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao atualizar produto: ', error);
+        });
+    } else {
+      api
+        .post('/produtos/', produto)
+        .then((response) => {
+          console.log('Produto criado: ', response.data);
+          fecharModal();
+        })
+        .catch((error) => {
+          console.error('Erro ao adicionar produto: ', error);
+        });
     }
   };
 
@@ -101,7 +89,10 @@ const ModalProdutos: React.FC<ModalProdutosProps> = ({
                   placeholder="Preço"
                   value={produto.preco}
                   onChange={(e) =>
-                    setProduto({ ...produto, preco: parseFloat(e.target.value) })
+                    setProduto({
+                      ...produto,
+                      preco: parseFloat(e.target.value),
+                    })
                   }
                 />
               </div>

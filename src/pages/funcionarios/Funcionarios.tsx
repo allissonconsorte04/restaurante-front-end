@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import './funcionarios.css'; // Certifique-se de ter o arquivo de estilo adequado
 import ModalFuncionarios from '../../components/modal/ModalFuncionarios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import api from '../../services/api';
 
 interface Funcionario {
   id?: number;
@@ -26,22 +26,14 @@ const Funcionarios = () => {
   }, []);
 
   const getAllFuncionarios = () => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .get('http://localhost:3000/api/funcionarios/', {
-          headers: {
-            Authorization: `${token}`,
-          },
-        })
+      api
+        .get('/funcionarios/')
         .then((response) => {
           setFuncionarios(response.data);
         })
         .catch((error) => {
           console.error('Erro ao obter funcionários:', error);
         });
-    }
   };
 
   const handleEditarFuncionario = (funcionario: Funcionario) => {
@@ -50,15 +42,8 @@ const Funcionarios = () => {
   };
 
   const handleRemoveFuncionario = (funcionario: Funcionario) => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      axios
-        .delete(`http://localhost:3000/api/funcionarios/${funcionario.id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
+      api
+        .delete(`/funcionarios/${funcionario.id}`)
         .then((response) => {
           console.log('Funcionário deletado: ', response.data);
           fecharModal();
@@ -66,7 +51,6 @@ const Funcionarios = () => {
         .catch((error) => {
           console.error('Erro ao deletar funcionário: ', error);
         });
-    }
   };
 
   const fecharModal = () => {

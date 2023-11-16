@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './modalClientes.css';
+import api from '../../services/api';
 
 interface Cliente {
   id?: number;
@@ -32,15 +32,9 @@ const ModalClientes: React.FC<ModalClientesProps> = ({
   }, [clienteData]);
 
   const handleSalvar = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
       if (cliente.id) {
-        axios
-          .put(`http://localhost:3000/api/clientes/${cliente.id}`, cliente, {
-            headers: {
-              Authorization: token,
-            },
-          })
+        api
+          .put(`/clientes/${cliente.id}`, cliente)
           .then((response) => {
             console.log('Cliente Atualizado: ', response.data);
             fecharModal();
@@ -49,12 +43,8 @@ const ModalClientes: React.FC<ModalClientesProps> = ({
             console.error('Erro ao atualizar cliente: ', error);
           });
       } else {
-        axios
-          .post('http://localhost:3000/api/clientes/', cliente, {
-            headers: {
-              Authorization: token,
-            },
-          })
+        api
+          .post('/clientes/', cliente)
           .then((response) => {
             console.log('Cliente criado: ', response.data);
             fecharModal();
@@ -63,7 +53,6 @@ const ModalClientes: React.FC<ModalClientesProps> = ({
             console.error('Erro ao adicionar cliente: ', error);
           });
       }
-    }
   };
 
   return (

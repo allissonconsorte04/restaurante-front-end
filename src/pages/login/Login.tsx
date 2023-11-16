@@ -29,7 +29,7 @@ function Login() {
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                 />
-                <span className="icon is-small is-left">
+                <span className="icon is-small is-left" style={{top: 4}}>
                   <i className="fas fa-envelope"></i>
                 </span>
               </div>
@@ -45,7 +45,7 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <span className="icon is-small is-left">
+                <span className="icon is-small is-left" style={{top: 4}}>
                   <Icon path={mdiLock} size={1} />
                 </span>
               </div>

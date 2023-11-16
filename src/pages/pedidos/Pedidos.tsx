@@ -4,9 +4,10 @@ import './pedidos.css'; // Certifique-se de ter o arquivo de estilo adequado
 import ModalPedidos from '../../components/modal/ModalPedidos';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faCheck } from '@fortawesome/free-solid-svg-icons';
 import ModalItensPedido from '../../components/modal/ModalItensPedido';
 import api from '../../services/api';
+import ModalFecharConta from '../../components/modal/ModalFecharConta';
 
 interface Pedido {
   id?: number;
@@ -16,10 +17,14 @@ interface Pedido {
   valor_total: number;
 }
 
+
+
 const Pedidos = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNewModalVisible, setNewModalVisible] = useState(false);
+  const [isModalFecharContaVisible, setModalFecharContaVisible] =
+    useState(false);
   const [pedidoParaEditar, setPedidoParaEditar] = useState<Pedido | null>(null);
 
   useEffect(() => {
@@ -47,7 +52,13 @@ const Pedidos = () => {
     setNewModalVisible(true);
   };
 
+  const handleFecharConta = (pedido: Pedido) => {
+    setPedidoParaEditar(pedido);
+    setModalFecharContaVisible(true);
+  };
+
   const fecharModal = () => {
+    setModalFecharContaVisible(false);
     setNewModalVisible(false);
     setModalVisible(false);
     setPedidoParaEditar(null);
@@ -98,6 +109,12 @@ const Pedidos = () => {
                 <div style={{ justifyContent: 'center', display: 'flex' }}>
                   <button
                     className="btn-edit btn"
+                    onClick={() => handleFecharConta(pedido)}
+                  >
+                    <FontAwesomeIcon icon={faCheck} />
+                  </button>
+                  <button
+                    className="btn-edit btn"
                     onClick={() => handleEditarPedido(pedido)}
                   >
                     <FontAwesomeIcon icon={faAdd} />
@@ -114,6 +131,12 @@ const Pedidos = () => {
       {isModalVisible && (
         <ModalItensPedido
           pedidoId={pedidoParaEditar?.id}
+          fecharModal={fecharModal}
+        />
+      )}
+      {isModalFecharContaVisible && (
+        <ModalFecharConta
+        pedidoId={pedidoParaEditar?.id}
           fecharModal={fecharModal}
         />
       )}
